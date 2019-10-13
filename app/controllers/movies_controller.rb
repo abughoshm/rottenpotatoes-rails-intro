@@ -9,22 +9,23 @@ class MoviesController < ApplicationController
     @movie = Movie.find(id) # look up movie by unique ID
     # will render app/views/movies/show.<extension> by default
   end
+
   def index
-    sessionCheck = !session[:sorting].nil? || !session[:rating].nil? 
+    # check status of session and current params for redirect 
+    sessionCheck = !session[:sorting].nil? || !session[:rating].nil?
     paramCheck = params[:sorting].nil? && params[:rating].nil?
     if (paramCheck && (sessionCheck))
-      redirect_to movies_path(:sorting => session[:sorting], :ratings => session[:ratings]) 
+      redirect_to movies_path(:sorting => session[:sorting], :ratings => session[:ratings])
     end
 
     @current_ratings = params[:ratings] || session[:ratings]
     @current_sorting = params[:sorting] || session[:sorting]
     @all_ratings = ['G','PG','PG-13','R']
-    @current_rating_keys = @current_ratings.nil? ? @all_ratings : @current_ratings.keys 
+    @current_rating_keys = @current_ratings.nil? ? @all_ratings : @current_ratings.keys
     @movies = Movie.where(rating: @current_rating_keys).order(@current_sorting)
 
-
-    session[:sorting] = @current_sorting 
-    session[:ratings] = @current_ratings 
+    session[:sorting] = @current_sorting
+    session[:ratings] = @current_ratings
     flash.keep
   end
 
