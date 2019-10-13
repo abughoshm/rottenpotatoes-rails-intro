@@ -14,7 +14,7 @@ class MoviesController < ApplicationController
     # check status of session and current params for redirect 
     sessionCheck = !session[:sorting].nil? || !session[:rating].nil?
     paramCheck = params[:sorting].nil? && params[:rating].nil?
-    if (paramCheck && (sessionCheck))
+    if (params[:sort].nil? && params[:ratings].nil? && (!session[:sort].nil? || !session[:ratings].nil?))
       redirect_to movies_path(:sorting => session[:sorting], :ratings => session[:ratings])
     end
 
